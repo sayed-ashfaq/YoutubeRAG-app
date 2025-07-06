@@ -1,0 +1,14 @@
+python-dotenv
+langchain
+streamlit
+langchain-community
+langchain-core
+langchain-google-genai
+youtube_transcript_api
+langchain-chroma
+pytube
+langchain-tavily
+langgraph
+flask
+flask_cors
+protobuf==3.20.3
