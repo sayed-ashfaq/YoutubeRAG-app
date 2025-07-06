@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Summarizer + QnA</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 50px auto; }
+        input, textarea, button { width: 100%; margin: 10px 0; padding: 10px; }
+        #answer-box { white-space: pre-line; background: #f0f0f0; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<h2>🎥 YouTube Summarizer & QnA</h2>
+
+<label for="url">YouTube Video URL:</label>
+<input type="text" id="url" placeholder="Paste YouTube URL here" />
+
+<label for="question">Ask a Question:</label>
+<textarea id="question" rows="3" placeholder="Ask something about the video..."></textarea>
+
+<button onclick="submitQuery()">🚀 Ask</button>
+
+<h3>🤖 Answer:</h3>
+<div id="answer-box">Waiting for your question...</div>
+
+<script>
+    async function submitQuery() {
+        const url = document.getElementById('url').value;
+        const question = document.getElementById('question').value;
+        const answerBox = document.getElementById('answer-box');
+
+        if (!url || !question) {
+            answerBox.innerText = "❌ Please enter both a URL and a question.";
+            return;
+        }
+
+        answerBox.innerText = "⏳ Loading... Please wait.";
+
+        try {
+            const response = await fetch("/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url, question })
+            });
+
+            const result = await response.json();
+
+            if (result.answer) {
+                answerBox.innerText = result.answer;
+            } else if (result.error) {
+                answerBox.innerText = "❌ Error: " + result.error;
+            } else {
+                answerBox.innerText = "⚠️ Unexpected response format.";
+            }
+        } catch (error) {
+            answerBox.innerText = "❌ Server Error: " + error.message;
+        }
+    }
+</script>
+
+</body>
+</html>
